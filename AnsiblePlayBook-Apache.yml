@@ -1,0 +1,16 @@
+---
+-hosts:launched
+vars:
+   http_port:80
+   max_clients:200
+tasks:
+
+-name:Stop the apache
+ shell:systemctl stop httpd
+ 
+-name:untar the latest apache conf file
+ unarchive:src=httpd.zip dest=/etc/httpd/conf/copy=no
+
+-name:start apache
+ shell:systemctl start httpd
+	

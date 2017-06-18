@@ -1,0 +1,11 @@
+---
+-hosts:launched
+vars:
+   http_port:80
+   max_clients:200
+tasks:
+
+- name: Restart Network
+ command: perl -e 'my $exit_code = system("service network restart"); sleep 3;      $exit_code = $exit_code >> 8; exit($exit_code);'
+
+	

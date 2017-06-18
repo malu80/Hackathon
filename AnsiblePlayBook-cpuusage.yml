@@ -1,0 +1,26 @@
+---
+- hosts: 192.168.122.161
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  tasks:
+
+  - name: check CPU %
+    shell: top -bn1 | grep load | awk '{printf "CPU Load= %.2f\n", $(NF-2)}'
+    register: hello
+
+  - name: Check the CPU Usage
+    assert: { that : hello.stdout > 1 }
+
+  - name: stop the playbook if CPU is Normal
+    fail: msg="CPU is abnormal"
+    when: hello.stdout < 1 
+
+  - name: find the process occupying more cpu usage
+    shell: ps -eo pid | sort -k 1 -r | grep -v PID | head -n 1
+    register: hello1
+  - set_fact: hello1={{ hello1 }}
+
+  - name: kill the Process
+    shell: kill -9 {{ hello1 }}
